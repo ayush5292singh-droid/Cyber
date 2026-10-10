@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b1b">
+  <title>FINOVA — Smart Money</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-page="dashboard">
+        <span class="brand-icon">F</span>
+        <span>FINOVA<small>SMART MONEY OS</small></span>
+      </a>
+
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-page="dashboard"><span>◈</span> Overview</button>
+      <button class="nav-item" data-page="transactions"><span>↕</span> Transactions</button>
+      <button class="nav-item" data-page="budgets"><span>▤</span> Budgets</button>
+      <button class="nav-item" data-page="goals"><span>◎</span> Savings goals</button>
+      <button class="nav-item" data-page="loans"><span>▱</span> Loans & EMI</button>
+      <button class="nav-item" data-page="analytics"><span>⌁</span> Analytics</button>
+
+      <div class="side-label pro-label">YOUR ADVANTAGE</div>
+      <button class="nav-item" data-page="pro"><span>✧</span> FINOVA Pro <span class="mini-pro">PRO</span></button>
+      <button class="nav-item" data-page="settings"><span>⚙</span> Settings</button>
+
+      <div class="sidebar-bottom">
+        <div class="upgrade-card">
+          <div class="upgrade-orb">✦</div>
+          <strong>Make money clearer.</strong>
+          <p>Explore the FINOVA Pro experience.</p>
+          <button class="btn btn-light btn-small" data-page="pro">Explore Pro ↗</button>
+        </div>
+        <div class="profile">
+          <div class="avatar">F</div>
+          <div><strong id="profileName">My Finance</strong><small>Personal account</small></div>
+          <button class="icon-btn" data-page="settings" aria-label="Settings">⋯</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-icon">F</span> FINOVA</div>
+        <div class="breadcrumb"><span>Workspace</span><span class="slash">/</span><strong id="pageName">Overview</strong></div>
+        <div class="top-actions">
+          <span class="live-dot"></span><span class="today-label">Your money, in focus</span>
+          <button class="icon-btn theme-btn" id="themeToggle" title="Toggle theme">☼</button>
+          <button class="avatar top-avatar" data-page="settings">F</button>
+        </div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-row">
+          <div>
+            <div class="eyebrow"><span class="sparkle">✦</span> YOUR FINANCIAL SPACE</div>
+            <h1>Money looks better <span class="gradient-text">in focus.</span></h1>
+            <p class="muted">A clearer view of what you have, what you spend, and what's next.</p>
+          </div>
+          <button class="btn btn-primary" id="addTransactionTop">＋ Add transaction</button>
+        </div>
+
+        <div class="hero-grid">
+          <div class="balance-card">
+            <div class="card-glow glow-one"></div><div class="card-glow glow-two"></div>
+            <div class="balance-top"><span class="glass-label"><span class="live-dot"></span> TOTAL BALANCE</span><button class="glass-icon" id="hideBalance" title="Hide balance">◉</button></div>
+            <div class="balance-amount" id="totalBalance">₹0</div>
+            <div class="balance-foot"><span>Across your tracked finances</span><span class="balance-chip">● Live overview</span></div>
+            <div class="balance-decoration"><span>FINOVA</span><span>◈ ◈ ◈</span></div>
+          </div>
+
+          <div class="mini-card income-card">
+            <div class="mini-card-head"><span class="metric-icon income-icon">↙</span><span class="metric-period">THIS MONTH</span></div>
+            <p class="muted">Total income</p>
+            <h2 id="totalIncome">₹0</h2>
+            <div class="metric-bottom"><span class="metric-line income-line"></span><span>Money in</span></div>
+          </div>
+
+          <div class="mini-card expense-card">
+            <div class="mini-card-head"><span class="metric-icon expense-icon">↗</span><span class="metric-period">THIS MONTH</span></div>
+            <p class="muted">Total expenses</p>
+            <h2 id="totalExpense">₹0</h2>
+            <div class="metric-bottom"><span class="metric-line expense-line"></span><span>Money out</span></div>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <div class="panel chart-panel">
+            <div class="panel-head">
+              <div><h3>Cash flow</h3><p class="muted">Income vs expenses by month</p></div>
+              <span class="pill">6 MONTHS</span>
+            </div>
+            <div class="chart-wrap"><canvas id="cashflowChart"></canvas></div>
+            <div class="chart-legend"><span><i class="legend-dot violet"></i> Income</span><span><i class="legend-dot cyan"></i> Expenses</span></div>
+          </div>
+
+          <div class="panel spending-panel">
+            <div class="panel-head"><div><h3>Spending mix</h3><p class="muted">Where your money goes</p></div><span class="round-icon">◌</span></div>
+            <div class="donut-wrap"><canvas id="spendingChart"></canvas><div class="donut-center"><small>SPENT</small><strong id="donutTotal">₹0</strong></div></div>
+            <div id="categoryLegend" class="category-legend"></div>
+          </div>
+        </div>
+
+        <div class="lower-grid">
+          <div class="panel transactions-panel">
+            <div class="panel-head"><div><h3>Recent activity</h3><p class="muted">Your latest money movements</p></div><button class="text-btn" data-page="transactions">View all ↗</button></div>
+            <div id="recentTransactions" class="transaction-list"></div>
+          </div>
+          <div class="panel budget-panel">
+            <div class="panel-head"><div><h3>Budget pulse</h3><p class="muted">Keep your spending on track</p></div><button class="text-btn" data-page="budgets">Details ↗</button></div>
+            <div id="budgetPreview"></div>
+            <button class="btn btn-outline full-btn" data-page="budgets">Manage budgets <span>→</span></button>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-action" id="quickIncome"><span class="quick-icon">↙</span><span><strong>Add income</strong><small>Record money received</small></span><b>＋</b></button>
+          <button class="quick-action" id="quickExpense"><span class="quick-icon expense-icon">↗</span><span><strong>Add expense</strong><small>Track a purchase</small></span><b>＋</b></button>
+          <button class="quick-action" data-page="goals"><span class="quick-icon goal-icon">◎</span><span><strong>Save toward a goal</strong><small>Build your future fund</small></span><b>→</b></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-transactions">
+        <div class="page-heading"><div><div class="eyebrow">MONEY MOVEMENTS</div><h1>Transactions</h1><p class="muted">Every rupee has a place. Keep track of yours.</p></div><button class="btn btn-primary" id="addTransactionPage">＋ Add transaction</button></div>
+        <div class="stats-row">
+          <div class="stat-card"><small>ALL INCOME</small><strong id="txIncome">₹0</strong></div>
+          <div class="stat-card"><small>ALL EXPENSES</small><strong id="txExpense">₹0</strong></div>
+          <div class="stat-card"><small>TRANSACTIONS</small><strong id="txCount">0</strong></div>
+        </div>
+        <div class="panel">
+          <div class="filter-row"><input id="transactionSearch" class="field search-field" placeholder="⌕  Search transactions..." /><select id="transactionFilter" class="field"><option value="all">All types</option><option value="income">Income</option><option value="expense">Expenses</option></select><button class="btn btn-outline" id="exportCsv">↓ Export CSV</button></div>
+          <div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>CATEGORY</th><th>DATE</th><th>TYPE</th><th class="align-right">AMOUNT</th><th></th></tr></thead><tbody id="transactionTable"></tbody></table></div>
+          <div id="emptyTransactions" class="empty-state" hidden>No transactions yet. Add your first income or expense to begin.</div>
+        </div>
+      </section>
+
+      <section class="page" id="page-budgets">
+        <div class="page-heading"><div><div class="eyebrow">SPENDING CONTROL</div><h1>Your budgets</h1><p class="muted">Give your money a plan before it leaves your pocket.</p></div><button class="btn btn-primary" id="addBudget">＋ Create budget</button></div>
+        <div class="stats-row">
+          <div class="stat-card"><small>TOTAL BUDGET</small><strong id="budgetTotal">₹0</strong></div>
+          <div class="stat-card"><small>SPENT SO FAR</small><strong id="budgetSpent">₹0</strong></div>
+          <div class="stat-card"><small>LEFT TO SPEND</small><strong id="budgetLeft">₹0</strong></div>
+        </div>
+        <div id="budgetGrid" class="budget-grid"></div>
+      </section>
+
+      <section class="page" id="page-goals">
+        <div class="page-heading"><div><div class="eyebrow">YOUR NEXT CHAPTER</div><h1>Savings goals</h1><p class="muted">Small contributions. Big milestones.</p></div><button class="btn btn-primary" id="addGoal">＋ New goal</button></div>
+        <div class="goal-banner"><div><span class="eyebrow">THE FUTURE FUND</span><h2>Give your goals a place to grow.</h2><p>Set a target, add contributions, and watch your progress build.</p></div><div class="goal-banner-orb">◎</div></div>
+        <div id="goalsGrid" class="goals-grid"></div>
+      </section>
+
+      <section class="page" id="page-loans">
+        <div class="page-heading"><div><div class="eyebrow">BORROW SMARTER</div><h1>Loans & EMI</h1><p class="muted">Track outstanding balances and record repayments.</p></div><button class="btn btn-primary" id="addLoan">＋ Add loan</button></div>
+        <div class="stats-row">
+          <div class="stat-card"><small>ORIGINAL LOANS</small><strong id="loanOriginal">₹0</strong></div>
+          <div class="stat-card"><small>REMAINING BALANCE</small><strong id="loanRemaining">₹0</strong></div>
+          <div class="stat-card"><small>REPAID SO FAR</small><strong id="loanRepaid">₹0</strong></div>
+        </div>
+        <div id="loansList" class="loans-list"></div>
+        <div class="note-panel"><span>✦</span><div><strong>Helpful reminder</strong><p>FINOVA tracks the loan information you enter. It does not connect to your bank or automatically pay your lender.</p></div></div>
+      </section>
+
+      <section class="page" id="page-analytics">
+        <div class="page-heading"><div><div class="eyebrow">SEE THE BIGGER PICTURE</div><h1>Analytics</h1><p class="muted">Understand your income, expenses, and spending habits.</p></div><button class="btn btn-outline" id="analyticsExport">↓ Export data</button></div>
+        <div class="content-grid analytics-grid">
+          <div class="panel"><div class="panel-head"><div><h3>Income vs expenses</h3><p class="muted">Monthly comparison</p></div></div><div class="chart-wrap tall"><canvas id="analyticsFlowChart"></canvas></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>Expense categories</h3><p class="muted">Your recorded expenses</p></div></div><div class="chart-wrap tall"><canvas id="analyticsCategoryChart"></canvas></div></div>
+        </div>
+        <div class="panel insight-panel"><div class="insight-mark">✧</div><div><h3>Your money snapshot</h3><p id="insightText">Add transactions to unlock your personal spending snapshot.</p></div></div>
+      </section>
+
+      <section class="page" id="page-pro">
+        <div class="pro-hero">
+          <div class="pro-topline"><span class="pro-symbol">✦</span> FINOVA <span class="gradient-text">PRO</span></div>
+          <h1>Your money deserves<br><span class="gradient-text">the next level.</span></h1>
+          <p>Explore a premium experience for people who want to plan ahead with confidence.</p>
+          <div class="pro-orbit orbit-a"></div><div class="pro-orbit orbit-b"></div><div class="pro-orbit orbit-c"></div>
+        </div>
+        <div class="pro-feature-grid">
+          <div class="pro-feature"><span>⌁</span><strong>Deeper analytics</strong><p>Explore spending patterns and money trends.</p></div>
+          <div class="pro-feature"><span>▤</span><strong>Export-ready records</strong><p>Download your tracked transactions as CSV.</p></div>
+          <div class="pro-feature"><span>◎</span><strong>Goal planning</strong><p>Organise targets and track contributions.</p></div>
+          <div class="pro-feature"><span>◈</span><strong>All-in-one overview</strong><p>Keep budgets, loans, and activity together.</p></div>
+        </div>
+        <div class="pricing-heading"><div class="eyebrow">CHOOSE YOUR PLAN</div><h2>Invest in a clearer money routine.</h2><p class="muted">Displayed prices are your proposed plan prices. Checkout is not connected yet.</p></div>
+        <div class="pricing-grid">
+          <div class="price-card"><span class="pill">MONTHLY</span><h3>Pro Monthly</h3><div class="price">₹99<span>/month</span></div><p>Flexible access, billed monthly when a payment system is connected.</p><ul><li>✦ Premium feature experience</li><li>✦ Detailed financial overview</li><li>✦ Downloadable transaction records</li></ul><button class="btn btn-outline full-btn subscribe" data-plan="Monthly">Choose monthly</button></div>
+          <div class="price-card featured-price"><div class="popular-tag">ANNUAL PLAN</div><span class="pill">BEST FOR LONG-TERM</span><h3>Pro Annual</h3><div class="price">₹1,969<span>/year</span></div><p>One annual plan for your long-term money routine.</p><ul><li>✦ Premium feature experience</li><li>✦ Detailed financial overview</li><li>✦ Downloadable transaction records</li></ul><button class="btn btn-primary full-btn subscribe" data-plan="Annual">Choose annual <span>→</span></button></div>
+        </div>
+        <p class="fine-print">Demo upgrade screen only. No payment is collected, and Pro status is not verified until a real checkout and server-side subscription validation are integrated.</p>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>Settings</h1><p class="muted">Manage your local FINOVA experience.</p></div></div>
+        <div class="panel settings-panel">
+          <div class="setting-row"><div><strong>Profile name</strong><p class="muted">The name displayed in your workspace.</p></div><div class="setting-control"><input id="settingName" class="field" value="My Finance" maxlength="28"><button class="btn btn-outline" id="saveName">Save</button></div></div>
+          <div class="setting-row"><div><strong>Currency</strong><p class="muted">Choose the symbol used for amounts.</p></div><select id="currencySelect" class="field setting-select"><option value="INR">INR · ₹ Indian Rupee</option><option value="USD">USD · $ US Dollar</option><option value="GBP">GBP · £ British Pound</option><option value="EUR">EUR · € Euro</option></select></div>
+          <div class="setting-row"><div><strong>Appearance</strong><p class="muted">Switch between dark and light themes.</p></div><button class="btn btn-outline" id="settingTheme">Toggle theme</button></div>
+          <div class="setting-row"><div><strong>Export your records</strong><p class="muted">Download your transactions as a CSV file.</p></div><button class="btn btn-outline" id="settingsExport">↓ Export CSV</button></div>
+          <div class="setting-row danger-row"><div><strong>Reset local data</strong><p class="muted">Permanently clear your FINOVA data in this browser.</p></div><button class="btn btn-danger" id="resetData">Reset data</button></div>
+        </div>
+        <div class="note-panel"><span>ⓘ</span><div><strong>Your data, your responsibility</strong><p>This demo stores data in this browser on this device. It does not provide cloud sync, bank connectivity, or secure account login.</p></div></div>
+      </section>
+
+      <footer class="app-footer"><span>◈ FINOVA</span><span>Make every rupee count.</span><span>PERSONAL FINANCE OS</span></footer>
+    </main>
+  </div>
+
+  <div class="mobile-nav">
+    <button class="mobile-nav-item active" data-page="dashboard"><span>◈</span><small>Home</small></button>
+    <button class="mobile-nav-item" data-page="transactions"><span>↕</span><small>Activity</small></button>
+    <button class="mobile-nav-item" data-page="budgets"><span>▤</span><small>Budgets</small></button>
+    <button class="mobile-nav-item" data-page="goals"><span>◎</span><small>Goals</small></button>
+    <button class="mobile-nav-item" data-page="pro"><span>✧</span><small>Pro</small></button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
